@@ -30,5 +30,7 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'rx-norm' => [
+        'base-url' => env('RX_NORM_BASE_URL', 'https://rxnav.nlm.nih.gov/REST/'),
+    ]
 ];
