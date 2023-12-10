@@ -17,12 +17,13 @@ class RxNormApiService
         })->first();
         $topFiveDrugs = array_slice($sbdData['conceptProperties'], 0, 5);
         foreach ($topFiveDrugs as &$d) {
+            unset($d['synonym'], $d['tty'], $d['language'], $d['suppress'], $d['umlscui']);
             $history = $this->getRxcuiHistoryStatus($d['rxcui']);
             // $d['history'] = $history;
             $ingredientAndStrength = $history['rxcuiStatusHistory']['definitionalFeatures']['ingredientAndStrength'];
-            $d['baseName'] = $ingredientAndStrength;
+            $d['baseNames'] = $ingredientAndStrength;
             $doseFormGroupConcept = $history['rxcuiStatusHistory']['definitionalFeatures']['doseFormGroupConcept'];
-            $d['doseFormGroupName'] = array_map(function ($i) {
+            $d['doseFormGroupNames'] = array_map(function ($i) {
                 return $i['doseFormGroupName'];
             }, $doseFormGroupConcept);
         }

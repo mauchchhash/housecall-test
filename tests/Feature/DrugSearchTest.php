@@ -25,9 +25,8 @@ class DrugSearchTest extends TestCase
                 [
                     'rxcui',
                     'name',
-                    'synonym',
-                    'baseName' => [],
-                    'doseFormGroupName' => []
+                    'baseNames' => [],
+                    'doseFormGroupNames' => []
                 ]
             ]]);
     }
