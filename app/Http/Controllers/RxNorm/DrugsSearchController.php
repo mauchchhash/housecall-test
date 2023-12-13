@@ -9,15 +9,15 @@ use App\Services\RxNormApiService;
 class DrugsSearchController extends Controller
 {
     /**
-     * Delete a prescribed drug of a user
+     * Search drug information via a drug name
      *
-     * @param  string $drug_name
-     * @return array $data
+     * @unauthenticated
+     * @urlParam drug_name string required The drug name to search for. Example: Naproxen
+     * @group Public APIs
      */
-    public function __invoke(DrugsSearchRequest $request)
+    public function __invoke(string $drugName)
     {
         try {
-            $drugName = $request->input('drug_name');
             $rxNormApiService = new RxNormApiService();
             $results = $rxNormApiService->searchDrugs($drugName);
             return response()->json(['data' => $results]);

@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Prescribed Drug Management</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/obsidian.min.css">
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"></script>
+
+    <style id="language-style">
+        /* starts out as display none and is replaced with js later  */
+                    body .content .bash-example code { display: none; }
+                    body .content .javascript-example code { display: none; }
+            </style>
+
+    <script>
+        var tryItOutBaseUrl = "http://localhost:8000";
+        var useCsrf = Boolean();
+        var csrfUrl = "/sanctum/csrf-cookie";
+    </script>
+    <script src="../docs/js/tryitout-4.26.0.js"></script>
+
+    <script src="../docs/js/theme-default-4.26.0.js"></script>
+
+</head>
+
+<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;]">
+
+<a href="#" id="nav-button">
+    <span>
+        MENU
+        <img src="../docs/images/navbar.png" alt="navbar-image"/>
+    </span>
+</a>
+<div class="tocify-wrapper">
+    
+            <div class="lang-selector">
+                                            <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                            <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                    </div>
+    
+    <div class="search">
+        <input type="text" class="search" id="input-search" placeholder="Search">
+    </div>
+
+    <div id="toc">
+                    <ul id="tocify-header-introduction" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="introduction">
+                    <a href="#introduction">Introduction</a>
+                </li>
+                            </ul>
+                    <ul id="tocify-header-authenticating-requests" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="authenticating-requests">
+                    <a href="#authenticating-requests">Authenticating requests</a>
+                </li>
+                            </ul>
+                    <ul id="tocify-header-auth-apis" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="auth-apis">
+                    <a href="#auth-apis">Auth APIs</a>
+                </li>
+                                    <ul id="tocify-subheader-auth-apis" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="auth-apis-POSTapi-auth-login">
+                                <a href="#auth-apis-POSTapi-auth-login">Login user and create token</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="auth-apis-POSTapi-auth-register">
+                                <a href="#auth-apis-POSTapi-auth-register">Register a user</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="auth-apis-GETapi-auth-logout">
+                                <a href="#auth-apis-GETapi-auth-logout">Logout user (Revoke the token)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="auth-apis-GETapi-auth-user">
+                                <a href="#auth-apis-GETapi-auth-user">Get the authenticated User</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+                    <ul id="tocify-header-public-apis" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="public-apis">
+                    <a href="#public-apis">Public APIs</a>
+                </li>
+                                    <ul id="tocify-subheader-public-apis" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="public-apis-GETapi-public-rx_norm_drugs-search--drug_name-">
+                                <a href="#public-apis-GETapi-public-rx_norm_drugs-search--drug_name-">Search drug information via a drug name</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+                    <ul id="tocify-header-user-drug-management" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="user-drug-management">
+                    <a href="#user-drug-management">User Drug Management</a>
+                </li>
+                                    <ul id="tocify-subheader-user-drug-management" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="user-drug-management-GETapi-users--user_id--drugs">
+                                <a href="#user-drug-management-GETapi-users--user_id--drugs">Get prescribed drugs for a user</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="user-drug-management-POSTapi-users--user_id--drugs">
+                                <a href="#user-drug-management-POSTapi-users--user_id--drugs">Store a prescribed drug for a user</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="user-drug-management-DELETEapi-users--user_id--drugs--rxcui-">
+                                <a href="#user-drug-management-DELETEapi-users--user_id--drugs--rxcui-">Delete a prescribed drug of a user</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+            </div>
+
+    <ul class="toc-footer" id="toc-footer">
+                    <li style="padding-bottom: 5px;"><a href="../docs/collection.json">View Postman collection</a></li>
+                            <li style="padding-bottom: 5px;"><a href="../docs/openapi.yaml">View OpenAPI spec</a></li>
+                <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
+    </ul>
+
+    <ul class="toc-footer" id="last-updated">
+        <li>Last updated: December 13, 2023</li>
+    </ul>
+</div>
+
+<div class="page-wrapper">
+    <div class="dark-box"></div>
+    <div class="content">
+        <h1 id="introduction">Introduction</h1>
+<p>Housecall's Portal for managing the prescribed drugs for patients.</p>
+<aside>
+    <strong>Base URL</strong>: <code>https://housecall-pdms.com</code>
+</aside>
+<p>This documentation aims to provide all the information you need to work with the Housecall Prescribed Drug Mangement API.</p>
+<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
+You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+
+        <h1 id="authenticating-requests">Authenticating requests</h1>
+<p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>You can retrieve your token by from the response returned by the register or login endpoint.</p>
+
+        <h1 id="auth-apis">Auth APIs</h1>
+
+    
+
+                                <h2 id="auth-apis-POSTapi-auth-login">Login user and create token</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-auth-login">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://housecall-pdms.com/api/auth/login" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"email\": \"johndoe@example.com\",
+    \"password\": \"someStrongPassword\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/auth/login"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "email": "johndoe@example.com",
+    "password": "someStrongPassword"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-auth-login">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+ &quot;accessToken&quot;: &quot;{{access_token}}&quot;
+ &quot;token_type&quot;: &quot;Bearer&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-auth-login" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-auth-login"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-auth-login"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-auth-login" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-auth-login">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-auth-login" data-method="POST"
+      data-path="api/auth/login"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-auth-login', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-auth-login"
+                    onclick="tryItOut('POSTapi-auth-login');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-auth-login"
+                    onclick="cancelTryOut('POSTapi-auth-login');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-auth-login"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/auth/login</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-auth-login"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-auth-login"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-auth-login"
+               value="johndoe@example.com"
+               data-component="body">
+    <br>
+<p>Email of the user. Example: <code>johndoe@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="POSTapi-auth-login"
+               value="someStrongPassword"
+               data-component="body">
+    <br>
+<p>Password of the user. Example: <code>someStrongPassword</code></p>
+        </div>
+        </form>
+
+                    <h2 id="auth-apis-POSTapi-auth-register">Register a user</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-auth-register">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://housecall-pdms.com/api/auth/register" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"John Doe\",
+    \"email\": \"johndoe@example.com\",
+    \"password\": \"someStrongPassword\",
+    \"confirm_password\": \"someStrongPassword\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/auth/register"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "password": "someStrongPassword",
+    "confirm_password": "someStrongPassword"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-auth-register">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Successfully created user!&quot;,
+    &quot;accessToken&quot;: &quot;{{access_token}}&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-auth-register" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-auth-register"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-auth-register"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-auth-register" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-auth-register">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-auth-register" data-method="POST"
+      data-path="api/auth/register"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-auth-register', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-auth-register"
+                    onclick="tryItOut('POSTapi-auth-register');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-auth-register"
+                    onclick="cancelTryOut('POSTapi-auth-register');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-auth-register"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/auth/register</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-auth-register"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-auth-register"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-auth-register"
+               value="John Doe"
+               data-component="body">
+    <br>
+<p>Name of the user. Example: <code>John Doe</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-auth-register"
+               value="johndoe@example.com"
+               data-component="body">
+    <br>
+<p>Email of the user. Example: <code>johndoe@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="POSTapi-auth-register"
+               value="someStrongPassword"
+               data-component="body">
+    <br>
+<p>Password of the user. Example: <code>someStrongPassword</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>confirm_password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="confirm_password"                data-endpoint="POSTapi-auth-register"
+               value="someStrongPassword"
+               data-component="body">
+    <br>
+<p>Retyped password for confirmation. Example: <code>someStrongPassword</code></p>
+        </div>
+        </form>
+
+                    <h2 id="auth-apis-GETapi-auth-logout">Logout user (Revoke the token)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-auth-logout">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://housecall-pdms.com/api/auth/logout" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/auth/logout"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-auth-logout">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 57
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Successfully logged out&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-auth-logout" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-auth-logout"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-auth-logout"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-auth-logout" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-auth-logout">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-auth-logout" data-method="GET"
+      data-path="api/auth/logout"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-auth-logout', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-auth-logout"
+                    onclick="tryItOut('GETapi-auth-logout');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-auth-logout"
+                    onclick="cancelTryOut('GETapi-auth-logout');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-auth-logout"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/auth/logout</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-auth-logout"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-auth-logout"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-auth-logout"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="auth-apis-GETapi-auth-user">Get the authenticated User</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-auth-user">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://housecall-pdms.com/api/auth/user" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/auth/user"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-auth-user">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;id&quot;: 2,
+    &quot;name&quot;: &quot;John Doe&quot;,
+    &quot;email&quot;: &quot;johndoe@example.com&quot;,
+    &quot;email_verified_at&quot;: &quot;2023-12-13T18:07:35.000000Z&quot;,
+    &quot;created_at&quot;: &quot;2023-12-13T18:07:35.000000Z&quot;,
+    &quot;updated_at&quot;: &quot;2023-12-13T18:07:35.000000Z&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-auth-user" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-auth-user"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-auth-user"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-auth-user" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-auth-user">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-auth-user" data-method="GET"
+      data-path="api/auth/user"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-auth-user', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-auth-user"
+                    onclick="tryItOut('GETapi-auth-user');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-auth-user"
+                    onclick="cancelTryOut('GETapi-auth-user');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-auth-user"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/auth/user</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-auth-user"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-auth-user"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-auth-user"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                <h1 id="public-apis">Public APIs</h1>
+
+    
+
+                                <h2 id="public-apis-GETapi-public-rx_norm_drugs-search--drug_name-">Search drug information via a drug name</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-public-rx_norm_drugs-search--drug_name-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://housecall-pdms.com/api/public/rx_norm_drugs/search/Naproxen" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/public/rx_norm_drugs/search/Naproxen"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-public-rx_norm_drugs-search--drug_name-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 56
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;rxcui&quot;: &quot;105898&quot;,
+            &quot;name&quot;: &quot;naproxen 250 MG Oral Tablet [Naprosyn]&quot;,
+            &quot;baseNames&quot;: [
+                {
+                    &quot;baseRxcui&quot;: &quot;7258&quot;,
+                    &quot;baseName&quot;: &quot;naproxen&quot;,
+                    &quot;bossRxcui&quot;: &quot;7258&quot;,
+                    &quot;bossName&quot;: &quot;naproxen&quot;,
+                    &quot;activeIngredientRxcui&quot;: &quot;7258&quot;,
+                    &quot;activeIngredientName&quot;: &quot;naproxen&quot;,
+                    &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                    &quot;moietyName&quot;: &quot;naproxen&quot;,
+                    &quot;numeratorValue&quot;: &quot;250&quot;,
+                    &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                    &quot;denominatorValue&quot;: &quot;1&quot;,
+                    &quot;denominatorUnit&quot;: &quot;EACH&quot;
+                }
+            ],
+            &quot;doseFormGroupNames&quot;: [
+                &quot;Oral Product&quot;,
+                &quot;Pill&quot;
+            ]
+        },
+        {
+            &quot;rxcui&quot;: &quot;105899&quot;,
+            &quot;name&quot;: &quot;naproxen 500 MG Oral Tablet [Naprosyn]&quot;,
+            &quot;baseNames&quot;: [
+                {
+                    &quot;baseRxcui&quot;: &quot;7258&quot;,
+                    &quot;baseName&quot;: &quot;naproxen&quot;,
+                    &quot;bossRxcui&quot;: &quot;7258&quot;,
+                    &quot;bossName&quot;: &quot;naproxen&quot;,
+                    &quot;activeIngredientRxcui&quot;: &quot;7258&quot;,
+                    &quot;activeIngredientName&quot;: &quot;naproxen&quot;,
+                    &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                    &quot;moietyName&quot;: &quot;naproxen&quot;,
+                    &quot;numeratorValue&quot;: &quot;500&quot;,
+                    &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                    &quot;denominatorValue&quot;: &quot;1&quot;,
+                    &quot;denominatorUnit&quot;: &quot;EACH&quot;
+                }
+            ],
+            &quot;doseFormGroupNames&quot;: [
+                &quot;Oral Product&quot;,
+                &quot;Pill&quot;
+            ]
+        },
+        {
+            &quot;rxcui&quot;: &quot;1112233&quot;,
+            &quot;name&quot;: &quot;naproxen sodium 220 MG Oral Capsule [Aleve]&quot;,
+            &quot;baseNames&quot;: [
+                {
+                    &quot;baseRxcui&quot;: &quot;7258&quot;,
+                    &quot;baseName&quot;: &quot;naproxen&quot;,
+                    &quot;bossRxcui&quot;: &quot;142442&quot;,
+                    &quot;bossName&quot;: &quot;naproxen sodium&quot;,
+                    &quot;activeIngredientRxcui&quot;: &quot;142442&quot;,
+                    &quot;activeIngredientName&quot;: &quot;naproxen sodium&quot;,
+                    &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                    &quot;moietyName&quot;: &quot;naproxen&quot;,
+                    &quot;numeratorValue&quot;: &quot;220&quot;,
+                    &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                    &quot;denominatorValue&quot;: &quot;1&quot;,
+                    &quot;denominatorUnit&quot;: &quot;EACH&quot;
+                }
+            ],
+            &quot;doseFormGroupNames&quot;: [
+                &quot;Oral Product&quot;,
+                &quot;Pill&quot;
+            ]
+        },
+        {
+            &quot;rxcui&quot;: &quot;1116331&quot;,
+            &quot;name&quot;: &quot;24 HR naproxen 375 MG Extended Release Oral Tablet [Naprelan]&quot;,
+            &quot;baseNames&quot;: [
+                {
+                    &quot;baseRxcui&quot;: &quot;7258&quot;,
+                    &quot;baseName&quot;: &quot;naproxen&quot;,
+                    &quot;bossRxcui&quot;: &quot;7258&quot;,
+                    &quot;bossName&quot;: &quot;naproxen&quot;,
+                    &quot;activeIngredientRxcui&quot;: &quot;142442&quot;,
+                    &quot;activeIngredientName&quot;: &quot;naproxen sodium&quot;,
+                    &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                    &quot;moietyName&quot;: &quot;naproxen&quot;,
+                    &quot;numeratorValue&quot;: &quot;375&quot;,
+                    &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                    &quot;denominatorValue&quot;: &quot;1&quot;,
+                    &quot;denominatorUnit&quot;: &quot;EACH&quot;
+                }
+            ],
+            &quot;doseFormGroupNames&quot;: [
+                &quot;Oral Product&quot;,
+                &quot;Pill&quot;
+            ]
+        },
+        {
+            &quot;rxcui&quot;: &quot;1116341&quot;,
+            &quot;name&quot;: &quot;24 HR naproxen 500 MG Extended Release Oral Tablet [Naprelan]&quot;,
+            &quot;baseNames&quot;: [
+                {
+                    &quot;baseRxcui&quot;: &quot;7258&quot;,
+                    &quot;baseName&quot;: &quot;naproxen&quot;,
+                    &quot;bossRxcui&quot;: &quot;7258&quot;,
+                    &quot;bossName&quot;: &quot;naproxen&quot;,
+                    &quot;activeIngredientRxcui&quot;: &quot;7258&quot;,
+                    &quot;activeIngredientName&quot;: &quot;naproxen&quot;,
+                    &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                    &quot;moietyName&quot;: &quot;naproxen&quot;,
+                    &quot;numeratorValue&quot;: &quot;500&quot;,
+                    &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                    &quot;denominatorValue&quot;: &quot;1&quot;,
+                    &quot;denominatorUnit&quot;: &quot;EACH&quot;
+                }
+            ],
+            &quot;doseFormGroupNames&quot;: [
+                &quot;Oral Product&quot;,
+                &quot;Pill&quot;
+            ]
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-public-rx_norm_drugs-search--drug_name-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-public-rx_norm_drugs-search--drug_name-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-public-rx_norm_drugs-search--drug_name-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-public-rx_norm_drugs-search--drug_name-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-public-rx_norm_drugs-search--drug_name-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-public-rx_norm_drugs-search--drug_name-" data-method="GET"
+      data-path="api/public/rx_norm_drugs/search/{drug_name}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-public-rx_norm_drugs-search--drug_name-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-public-rx_norm_drugs-search--drug_name-"
+                    onclick="tryItOut('GETapi-public-rx_norm_drugs-search--drug_name-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-public-rx_norm_drugs-search--drug_name-"
+                    onclick="cancelTryOut('GETapi-public-rx_norm_drugs-search--drug_name-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-public-rx_norm_drugs-search--drug_name-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/public/rx_norm_drugs/search/{drug_name}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-public-rx_norm_drugs-search--drug_name-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-public-rx_norm_drugs-search--drug_name-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>drug_name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="drug_name"                data-endpoint="GETapi-public-rx_norm_drugs-search--drug_name-"
+               value="Naproxen"
+               data-component="url">
+    <br>
+<p>The drug name to search for. Example: <code>Naproxen</code></p>
+            </div>
+                    </form>
+
+                <h1 id="user-drug-management">User Drug Management</h1>
+
+    
+
+                                <h2 id="user-drug-management-GETapi-users--user_id--drugs">Get prescribed drugs for a user</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-users--user_id--drugs">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://housecall-pdms.com/api/users/1/drugs" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/users/1/drugs"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-users--user_id--drugs">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 2,
+            &quot;user_id&quot;: 1,
+            &quot;rxcui&quot;: &quot;105898&quot;,
+            &quot;name&quot;: &quot;naproxen 250 MG Oral Tablet [Naprosyn]&quot;,
+            &quot;base_names&quot;: [
+                {
+                    &quot;baseRxcui&quot;: &quot;7258&quot;,
+                    &quot;baseName&quot;: &quot;naproxen&quot;,
+                    &quot;bossRxcui&quot;: &quot;7258&quot;,
+                    &quot;bossName&quot;: &quot;naproxen&quot;,
+                    &quot;activeIngredientRxcui&quot;: &quot;7258&quot;,
+                    &quot;activeIngredientName&quot;: &quot;naproxen&quot;,
+                    &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                    &quot;moietyName&quot;: &quot;naproxen&quot;,
+                    &quot;numeratorValue&quot;: &quot;250&quot;,
+                    &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                    &quot;denominatorValue&quot;: &quot;1&quot;,
+                    &quot;denominatorUnit&quot;: &quot;EACH&quot;
+                }
+            ],
+            &quot;dose_form_group_names&quot;: [
+                &quot;Oral Product&quot;,
+                &quot;Pill&quot;
+            ],
+            &quot;created_at&quot;: &quot;2023-12-13T18:22:45.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2023-12-13T18:22:45.000000Z&quot;
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-users--user_id--drugs" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-users--user_id--drugs"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-users--user_id--drugs"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-users--user_id--drugs" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-users--user_id--drugs">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-users--user_id--drugs" data-method="GET"
+      data-path="api/users/{user_id}/drugs"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-users--user_id--drugs', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-users--user_id--drugs"
+                    onclick="tryItOut('GETapi-users--user_id--drugs');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-users--user_id--drugs"
+                    onclick="cancelTryOut('GETapi-users--user_id--drugs');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-users--user_id--drugs"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/users/{user_id}/drugs</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-users--user_id--drugs"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-users--user_id--drugs"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-users--user_id--drugs"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="user_id"                data-endpoint="GETapi-users--user_id--drugs"
+               value="1"
+               data-component="url">
+    <br>
+<p>The id of the user. Example: <code>1</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="user-drug-management-POSTapi-users--user_id--drugs">Store a prescribed drug for a user</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-users--user_id--drugs">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://housecall-pdms.com/api/users/1/drugs" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"rxcui\": \"105898\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/users/1/drugs"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "rxcui": "105898"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-users--user_id--drugs">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;rxcui&quot;: &quot;105898&quot;,
+        &quot;name&quot;: &quot;naproxen 250 MG Oral Tablet [Naprosyn]&quot;,
+        &quot;base_names&quot;: [
+            {
+                &quot;baseRxcui&quot;: &quot;7258&quot;,
+                &quot;baseName&quot;: &quot;naproxen&quot;,
+                &quot;bossRxcui&quot;: &quot;7258&quot;,
+                &quot;bossName&quot;: &quot;naproxen&quot;,
+                &quot;activeIngredientRxcui&quot;: &quot;7258&quot;,
+                &quot;activeIngredientName&quot;: &quot;naproxen&quot;,
+                &quot;moietyRxcui&quot;: &quot;7258&quot;,
+                &quot;moietyName&quot;: &quot;naproxen&quot;,
+                &quot;numeratorValue&quot;: &quot;250&quot;,
+                &quot;numeratorUnit&quot;: &quot;MG&quot;,
+                &quot;denominatorValue&quot;: &quot;1&quot;,
+                &quot;denominatorUnit&quot;: &quot;EACH&quot;
+            }
+        ],
+        &quot;dose_form_group_names&quot;: [
+            &quot;Oral Product&quot;,
+            &quot;Pill&quot;
+        ],
+        &quot;user_id&quot;: 1,
+        &quot;updated_at&quot;: &quot;2023-12-13T18:22:45.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2023-12-13T18:22:45.000000Z&quot;,
+        &quot;id&quot;: 2
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-users--user_id--drugs" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-users--user_id--drugs"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-users--user_id--drugs"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-users--user_id--drugs" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-users--user_id--drugs">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-users--user_id--drugs" data-method="POST"
+      data-path="api/users/{user_id}/drugs"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-users--user_id--drugs', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-users--user_id--drugs"
+                    onclick="tryItOut('POSTapi-users--user_id--drugs');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-users--user_id--drugs"
+                    onclick="cancelTryOut('POSTapi-users--user_id--drugs');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-users--user_id--drugs"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/users/{user_id}/drugs</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-users--user_id--drugs"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-users--user_id--drugs"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-users--user_id--drugs"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="user_id"                data-endpoint="POSTapi-users--user_id--drugs"
+               value="1"
+               data-component="url">
+    <br>
+<p>The id of the user. Example: <code>1</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>rxcui</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="rxcui"                data-endpoint="POSTapi-users--user_id--drugs"
+               value="105898"
+               data-component="body">
+    <br>
+<p>The rxcui of the drug. Example: <code>105898</code></p>
+        </div>
+        </form>
+
+                    <h2 id="user-drug-management-DELETEapi-users--user_id--drugs--rxcui-">Delete a prescribed drug of a user</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-users--user_id--drugs--rxcui-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "https://housecall-pdms.com/api/users/1/drugs/105898" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://housecall-pdms.com/api/users/1/drugs/105898"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-users--user_id--drugs--rxcui-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The drug is deleted&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-users--user_id--drugs--rxcui-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-users--user_id--drugs--rxcui-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-users--user_id--drugs--rxcui-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-users--user_id--drugs--rxcui-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-users--user_id--drugs--rxcui-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-users--user_id--drugs--rxcui-" data-method="DELETE"
+      data-path="api/users/{user_id}/drugs/{rxcui}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-users--user_id--drugs--rxcui-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-users--user_id--drugs--rxcui-"
+                    onclick="tryItOut('DELETEapi-users--user_id--drugs--rxcui-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-users--user_id--drugs--rxcui-"
+                    onclick="cancelTryOut('DELETEapi-users--user_id--drugs--rxcui-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-users--user_id--drugs--rxcui-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/users/{user_id}/drugs/{rxcui}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-users--user_id--drugs--rxcui-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-users--user_id--drugs--rxcui-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-users--user_id--drugs--rxcui-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>user_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="user_id"                data-endpoint="DELETEapi-users--user_id--drugs--rxcui-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The id of the user. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>rxcui</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="rxcui"                data-endpoint="DELETEapi-users--user_id--drugs--rxcui-"
+               value="105898"
+               data-component="url">
+    <br>
+<p>The 'rxcui' of the drug to be deleted. Example: <code>105898</code></p>
+            </div>
+                    </form>
+
+            
+
+        
+    </div>
+    <div class="dark-box">
+                    <div class="lang-selector">
+                                                        <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                                        <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                            </div>
+            </div>
+</div>
+</body>
+</html>

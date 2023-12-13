@@ -1,0 +1,400 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "https:\/\/housecall-pdms.com"
+        }
+    ],
+    "info": {
+        "name": "Prescribed Drug Management",
+        "_postman_id": "e0c741a7-b03e-4175-8020-27bf1c7ac89f",
+        "description": "Housecall's Portal for managing the prescribed drugs for patients.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth APIs",
+            "description": "",
+            "item": [
+                {
+                    "name": "Login user and create token",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"johndoe@example.com\",\"password\":\"someStrongPassword\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"accessToken\": \"{{access_token}}\"\n \"token_type\": \"Bearer\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Register a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"johndoe@example.com\",\"password\":\"someStrongPassword\",\"confirm_password\":\"someStrongPassword\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Successfully created user!\",\n \"accessToken\": \"{{access_token}}\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout user (Revoke the token)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/logout"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "60"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "57"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"message\":\"Successfully logged out\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get the authenticated User",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"id\": 2,\n \"name\": \"John Doe\",\n \"email\": \"johndoe@example.com\",\n \"email_verified_at\": \"2023-12-13T18:07:35.000000Z\",\n \"created_at\": \"2023-12-13T18:07:35.000000Z\",\n \"updated_at\": \"2023-12-13T18:07:35.000000Z\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Public APIs",
+            "description": "",
+            "item": [
+                {
+                    "name": "Search drug information via a drug name",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/public\/rx_norm_drugs\/search\/:drug_name",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/public\/rx_norm_drugs\/search\/:drug_name",
+                            "variable": [
+                                {
+                                    "id": "drug_name",
+                                    "key": "drug_name",
+                                    "value": "Naproxen",
+                                    "description": "The drug name to search for."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-ratelimit-limit",
+                                    "value": "60"
+                                },
+                                {
+                                    "key": "x-ratelimit-remaining",
+                                    "value": "56"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 200,
+                            "body": "{\"data\":[{\"rxcui\":\"105898\",\"name\":\"naproxen 250 MG Oral Tablet [Naprosyn]\",\"baseNames\":[{\"baseRxcui\":\"7258\",\"baseName\":\"naproxen\",\"bossRxcui\":\"7258\",\"bossName\":\"naproxen\",\"activeIngredientRxcui\":\"7258\",\"activeIngredientName\":\"naproxen\",\"moietyRxcui\":\"7258\",\"moietyName\":\"naproxen\",\"numeratorValue\":\"250\",\"numeratorUnit\":\"MG\",\"denominatorValue\":\"1\",\"denominatorUnit\":\"EACH\"}],\"doseFormGroupNames\":[\"Oral Product\",\"Pill\"]},{\"rxcui\":\"105899\",\"name\":\"naproxen 500 MG Oral Tablet [Naprosyn]\",\"baseNames\":[{\"baseRxcui\":\"7258\",\"baseName\":\"naproxen\",\"bossRxcui\":\"7258\",\"bossName\":\"naproxen\",\"activeIngredientRxcui\":\"7258\",\"activeIngredientName\":\"naproxen\",\"moietyRxcui\":\"7258\",\"moietyName\":\"naproxen\",\"numeratorValue\":\"500\",\"numeratorUnit\":\"MG\",\"denominatorValue\":\"1\",\"denominatorUnit\":\"EACH\"}],\"doseFormGroupNames\":[\"Oral Product\",\"Pill\"]},{\"rxcui\":\"1112233\",\"name\":\"naproxen sodium 220 MG Oral Capsule [Aleve]\",\"baseNames\":[{\"baseRxcui\":\"7258\",\"baseName\":\"naproxen\",\"bossRxcui\":\"142442\",\"bossName\":\"naproxen sodium\",\"activeIngredientRxcui\":\"142442\",\"activeIngredientName\":\"naproxen sodium\",\"moietyRxcui\":\"7258\",\"moietyName\":\"naproxen\",\"numeratorValue\":\"220\",\"numeratorUnit\":\"MG\",\"denominatorValue\":\"1\",\"denominatorUnit\":\"EACH\"}],\"doseFormGroupNames\":[\"Oral Product\",\"Pill\"]},{\"rxcui\":\"1116331\",\"name\":\"24 HR naproxen 375 MG Extended Release Oral Tablet [Naprelan]\",\"baseNames\":[{\"baseRxcui\":\"7258\",\"baseName\":\"naproxen\",\"bossRxcui\":\"7258\",\"bossName\":\"naproxen\",\"activeIngredientRxcui\":\"142442\",\"activeIngredientName\":\"naproxen sodium\",\"moietyRxcui\":\"7258\",\"moietyName\":\"naproxen\",\"numeratorValue\":\"375\",\"numeratorUnit\":\"MG\",\"denominatorValue\":\"1\",\"denominatorUnit\":\"EACH\"}],\"doseFormGroupNames\":[\"Oral Product\",\"Pill\"]},{\"rxcui\":\"1116341\",\"name\":\"24 HR naproxen 500 MG Extended Release Oral Tablet [Naprelan]\",\"baseNames\":[{\"baseRxcui\":\"7258\",\"baseName\":\"naproxen\",\"bossRxcui\":\"7258\",\"bossName\":\"naproxen\",\"activeIngredientRxcui\":\"7258\",\"activeIngredientName\":\"naproxen\",\"moietyRxcui\":\"7258\",\"moietyName\":\"naproxen\",\"numeratorValue\":\"500\",\"numeratorUnit\":\"MG\",\"denominatorValue\":\"1\",\"denominatorUnit\":\"EACH\"}],\"doseFormGroupNames\":[\"Oral Product\",\"Pill\"]}]}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "User Drug Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get prescribed drugs for a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:user_id\/drugs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:user_id\/drugs",
+                            "variable": [
+                                {
+                                    "id": "user_id",
+                                    "key": "user_id",
+                                    "value": "1",
+                                    "description": "The id of the user."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"data\": [ { \"id\": 2, \"user_id\": 1, \"rxcui\": \"105898\", \"name\": \"naproxen 250 MG Oral Tablet [Naprosyn]\", \"base_names\": [ { \"baseRxcui\": \"7258\", \"baseName\": \"naproxen\", \"bossRxcui\": \"7258\", \"bossName\": \"naproxen\", \"activeIngredientRxcui\": \"7258\", \"activeIngredientName\": \"naproxen\", \"moietyRxcui\": \"7258\", \"moietyName\": \"naproxen\", \"numeratorValue\": \"250\", \"numeratorUnit\": \"MG\", \"denominatorValue\": \"1\", \"denominatorUnit\": \"EACH\" } ], \"dose_form_group_names\": [ \"Oral Product\", \"Pill\" ], \"created_at\": \"2023-12-13T18:22:45.000000Z\", \"updated_at\": \"2023-12-13T18:22:45.000000Z\" } ] }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Store a prescribed drug for a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:user_id\/drugs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:user_id\/drugs",
+                            "variable": [
+                                {
+                                    "id": "user_id",
+                                    "key": "user_id",
+                                    "value": "1",
+                                    "description": "The id of the user."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"rxcui\":\"105898\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"data\": { \"rxcui\": \"105898\", \"name\": \"naproxen 250 MG Oral Tablet [Naprosyn]\", \"base_names\": [ { \"baseRxcui\": \"7258\", \"baseName\": \"naproxen\", \"bossRxcui\": \"7258\", \"bossName\": \"naproxen\", \"activeIngredientRxcui\": \"7258\", \"activeIngredientName\": \"naproxen\", \"moietyRxcui\": \"7258\", \"moietyName\": \"naproxen\", \"numeratorValue\": \"250\", \"numeratorUnit\": \"MG\", \"denominatorValue\": \"1\", \"denominatorUnit\": \"EACH\" } ], \"dose_form_group_names\": [ \"Oral Product\", \"Pill\" ], \"user_id\": 1, \"updated_at\": \"2023-12-13T18:22:45.000000Z\", \"created_at\": \"2023-12-13T18:22:45.000000Z\", \"id\": 2 } }",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a prescribed drug of a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:user_id\/drugs\/:rxcui",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:user_id\/drugs\/:rxcui",
+                            "variable": [
+                                {
+                                    "id": "user_id",
+                                    "key": "user_id",
+                                    "value": "1",
+                                    "description": "The id of the user."
+                                },
+                                {
+                                    "id": "rxcui",
+                                    "key": "rxcui",
+                                    "value": "105898",
+                                    "description": "The 'rxcui' of the drug to be deleted."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{ \"message\": \"The drug is deleted\" }",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

@@ -50,7 +50,7 @@ class DrugsTest extends TestCase
         ]);
         $drugId = $createdDrugResponse['data']['id'];
 
-        $this->delete("/api/users/{$user->id}/drugs/105898")->assertStatus(204);
+        $this->delete("/api/users/{$user->id}/drugs/105898")->assertStatus(200);
     }
 
     public function test_get_prescribed_drugs_of_user(): void

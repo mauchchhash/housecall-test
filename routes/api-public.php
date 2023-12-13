@@ -10,4 +10,4 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/rx_norm_drugs/search', DrugsSearchController::class);
+Route::get('/rx_norm_drugs/search/{drug_name}', DrugsSearchController::class);

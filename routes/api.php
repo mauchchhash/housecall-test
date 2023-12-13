@@ -28,7 +28,7 @@ Route::group(['prefix' => 'auth'], function () {
 /**
  * User's Prescribed drugs routes
  */
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => 'auth:sanctum', 'as' => 'Prescribed Drugs'], function () {
     Route::get('users/{user}/drugs', [DrugController::class, 'index']);
     Route::post('users/{user}/drugs', [DrugController::class, 'store']);
     Route::delete('users/{user}/drugs/{rxcui}', [DrugController::class, 'delete']);

@@ -10,14 +10,18 @@ use Validator;
 class AuthController extends Controller
 {
     /**
-     * Create user
+     * Register a user
      *
-     * @param  [string] name
-     * @param  [string] email
-     * @param  [string] password
-     * @param  [string] confirm_password
-     * @return [string] message
-     * @return [string] accessToken
+     * @bodyParam name string Name of the user. Example: John Doe
+     * @bodyParam email string Email of the user. Example: johndoe@example.com
+     * @bodyParam password string Password of the user. Example: someStrongPassword
+     * @bodyParam confirm_password string Retyped password for confirmation. Example: someStrongPassword
+     * @response {
+     *  "message": "Successfully created user!",
+     *  "accessToken": "{{access_token}}"
+     * }
+     * @unauthenticated
+     * @group Auth APIs
      */
     public function register(Request $request)
     {
@@ -50,10 +54,14 @@ class AuthController extends Controller
     /**
      * Login user and create token
      *
-     * @param  [string] email
-     * @param  [string] password
-     * @return [string] accessToken
-     * @return [string] token_type
+     * @bodyParam email string Email of the user. Example: johndoe@example.com
+     * @bodyParam password string Password of the user. Example: someStrongPassword
+     * @response {
+     *  "accessToken": "{{access_token}}"
+     *  "token_type": "Bearer"
+     * }
+     * @unauthenticated
+     * @group Auth APIs
      */
 
     public function login(Request $request)
@@ -83,7 +91,15 @@ class AuthController extends Controller
     /**
      * Get the authenticated User
      *
-     * @return [json] user object
+     * @response {
+     *  "id": 2,
+     *  "name": "John Doe",
+     *  "email": "johndoe@example.com",
+     *  "email_verified_at": "2023-12-13T18:07:35.000000Z",
+     *  "created_at": "2023-12-13T18:07:35.000000Z",
+     *  "updated_at": "2023-12-13T18:07:35.000000Z"
+     * }
+     * @group Auth APIs
      */
     public function user(Request $request)
     {
@@ -93,7 +109,7 @@ class AuthController extends Controller
     /**
      * Logout user (Revoke the token)
      *
-     * @return [string] message
+     * @group Auth APIs
      */
     public function logout(Request $request)
     {

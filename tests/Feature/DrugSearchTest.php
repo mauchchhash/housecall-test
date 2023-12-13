@@ -16,7 +16,7 @@ class DrugSearchTest extends TestCase
             'https://rxnav.nlm.nih.gov/REST/rxcui/*/historystatus.json' => Http::response(file_get_contents(base_path('tests/Feature/mockHttpResponses/RxNormApi/getRxcuiHistoryStatus.json')), 200),
         ]);
         $searchTerm = "Naproxen";
-        $response = $this->get("/api/public/rx_norm_drugs/search?drug_name=$searchTerm");
+        $response = $this->get("/api/public/rx_norm_drugs/search/$searchTerm");
         $response->assertStatus(200)
             ->assertJsonStructure(['data' => [
                 [

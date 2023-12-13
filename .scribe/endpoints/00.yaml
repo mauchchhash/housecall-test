@@ -1,0 +1,236 @@
+name: 'Auth APIs'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/auth/login
+    metadata:
+      groupName: 'Auth APIs'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Login user and create token'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: 'Email of the user.'
+        required: false
+        example: johndoe@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+      password:
+        name: password
+        description: 'Password of the user.'
+        required: false
+        example: someStrongPassword
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanBodyParameters:
+      email: johndoe@example.com
+      password: someStrongPassword
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "accessToken": "{{access_token}}"
+           "token_type": "Bearer"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/auth/register
+    metadata:
+      groupName: 'Auth APIs'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Register a user'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Name of the user.'
+        required: false
+        example: 'John Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+      email:
+        name: email
+        description: 'Email of the user.'
+        required: false
+        example: johndoe@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+      password:
+        name: password
+        description: 'Password of the user.'
+        required: false
+        example: someStrongPassword
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+      confirm_password:
+        name: confirm_password
+        description: 'Retyped password for confirmation.'
+        required: false
+        example: someStrongPassword
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanBodyParameters:
+      name: 'John Doe'
+      email: johndoe@example.com
+      password: someStrongPassword
+      confirm_password: someStrongPassword
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Successfully created user!",
+           "accessToken": "{{access_token}}"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/auth/logout
+    metadata:
+      groupName: 'Auth APIs'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Logout user (Revoke the token)'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"message":"Successfully logged out"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '57'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|BqPpEJSHpdNA70baqjrDoP6AL5UXLAVz9pHP8hg65c7f4dce'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/auth/user
+    metadata:
+      groupName: 'Auth APIs'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get the authenticated User'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "id": 2,
+           "name": "John Doe",
+           "email": "johndoe@example.com",
+           "email_verified_at": "2023-12-13T18:07:35.000000Z",
+           "created_at": "2023-12-13T18:07:35.000000Z",
+           "updated_at": "2023-12-13T18:07:35.000000Z"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 2|BqPpEJSHpdNA70baqjrDoP6AL5UXLAVz9pHP8hg65c7f4dce'
+    controller: null
+    method: null
+    route: null
+    custom: []

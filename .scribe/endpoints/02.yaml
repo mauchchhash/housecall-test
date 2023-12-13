@@ -1,0 +1,54 @@
+name: 'Public APIs'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: 'api/public/rx_norm_drugs/search/{drug_name}'
+    metadata:
+      groupName: 'Public APIs'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search drug information via a drug name'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      drug_name:
+        name: drug_name
+        description: 'The drug name to search for.'
+        required: true
+        example: Naproxen
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanUrlParameters:
+      drug_name: Naproxen
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"data":[{"rxcui":"105898","name":"naproxen 250 MG Oral Tablet [Naprosyn]","baseNames":[{"baseRxcui":"7258","baseName":"naproxen","bossRxcui":"7258","bossName":"naproxen","activeIngredientRxcui":"7258","activeIngredientName":"naproxen","moietyRxcui":"7258","moietyName":"naproxen","numeratorValue":"250","numeratorUnit":"MG","denominatorValue":"1","denominatorUnit":"EACH"}],"doseFormGroupNames":["Oral Product","Pill"]},{"rxcui":"105899","name":"naproxen 500 MG Oral Tablet [Naprosyn]","baseNames":[{"baseRxcui":"7258","baseName":"naproxen","bossRxcui":"7258","bossName":"naproxen","activeIngredientRxcui":"7258","activeIngredientName":"naproxen","moietyRxcui":"7258","moietyName":"naproxen","numeratorValue":"500","numeratorUnit":"MG","denominatorValue":"1","denominatorUnit":"EACH"}],"doseFormGroupNames":["Oral Product","Pill"]},{"rxcui":"1112233","name":"naproxen sodium 220 MG Oral Capsule [Aleve]","baseNames":[{"baseRxcui":"7258","baseName":"naproxen","bossRxcui":"142442","bossName":"naproxen sodium","activeIngredientRxcui":"142442","activeIngredientName":"naproxen sodium","moietyRxcui":"7258","moietyName":"naproxen","numeratorValue":"220","numeratorUnit":"MG","denominatorValue":"1","denominatorUnit":"EACH"}],"doseFormGroupNames":["Oral Product","Pill"]},{"rxcui":"1116331","name":"24 HR naproxen 375 MG Extended Release Oral Tablet [Naprelan]","baseNames":[{"baseRxcui":"7258","baseName":"naproxen","bossRxcui":"7258","bossName":"naproxen","activeIngredientRxcui":"142442","activeIngredientName":"naproxen sodium","moietyRxcui":"7258","moietyName":"naproxen","numeratorValue":"375","numeratorUnit":"MG","denominatorValue":"1","denominatorUnit":"EACH"}],"doseFormGroupNames":["Oral Product","Pill"]},{"rxcui":"1116341","name":"24 HR naproxen 500 MG Extended Release Oral Tablet [Naprelan]","baseNames":[{"baseRxcui":"7258","baseName":"naproxen","bossRxcui":"7258","bossName":"naproxen","activeIngredientRxcui":"7258","activeIngredientName":"naproxen","moietyRxcui":"7258","moietyName":"naproxen","numeratorValue":"500","numeratorUnit":"MG","denominatorValue":"1","denominatorUnit":"EACH"}],"doseFormGroupNames":["Oral Product","Pill"]}]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '56'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

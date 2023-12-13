@@ -1,0 +1,808 @@
+openapi: 3.0.3
+info:
+  title: 'Prescribed Drug Management'
+  description: "Housecall's Portal for managing the prescribed drugs for patients."
+  version: 1.0.0
+servers:
+  -
+    url: 'https://housecall-pdms.com'
+paths:
+  /api/auth/login:
+    post:
+      summary: 'Login user and create token'
+      operationId: loginUserAndCreateToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n \"accessToken\": \"{{access_token}}\"\n \"token_type\": \"Bearer\"\n}"
+      tags:
+        - 'Auth APIs'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Email of the user.'
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  description: 'Password of the user.'
+                  example: someStrongPassword
+      security: []
+  /api/auth/register:
+    post:
+      summary: 'Register a user'
+      operationId: registerAUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Successfully created user!'
+                  accessToken: '{{access_token}}'
+                properties:
+                  message:
+                    type: string
+                    example: 'Successfully created user!'
+                  accessToken:
+                    type: string
+                    example: '{{access_token}}'
+      tags:
+        - 'Auth APIs'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the user.'
+                  example: 'John Doe'
+                email:
+                  type: string
+                  description: 'Email of the user.'
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  description: 'Password of the user.'
+                  example: someStrongPassword
+                confirm_password:
+                  type: string
+                  description: 'Retyped password for confirmation.'
+                  example: someStrongPassword
+      security: []
+  /api/auth/logout:
+    get:
+      summary: 'Logout user (Revoke the token)'
+      operationId: logoutUserRevokeTheToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Successfully logged out'
+                properties:
+                  message:
+                    type: string
+                    example: 'Successfully logged out'
+      tags:
+        - 'Auth APIs'
+  /api/auth/user:
+    get:
+      summary: 'Get the authenticated User'
+      operationId: getTheAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 2
+                  name: 'John Doe'
+                  email: johndoe@example.com
+                  email_verified_at: '2023-12-13T18:07:35.000000Z'
+                  created_at: '2023-12-13T18:07:35.000000Z'
+                  updated_at: '2023-12-13T18:07:35.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: 'John Doe'
+                  email:
+                    type: string
+                    example: johndoe@example.com
+                  email_verified_at:
+                    type: string
+                    example: '2023-12-13T18:07:35.000000Z'
+                  created_at:
+                    type: string
+                    example: '2023-12-13T18:07:35.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2023-12-13T18:07:35.000000Z'
+      tags:
+        - 'Auth APIs'
+  '/api/public/rx_norm_drugs/search/{drug_name}':
+    get:
+      summary: 'Search drug information via a drug name'
+      operationId: searchDrugInformationViaADrugName
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      rxcui: '105898'
+                      name: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                      baseNames:
+                        -
+                          baseRxcui: '7258'
+                          baseName: naproxen
+                          bossRxcui: '7258'
+                          bossName: naproxen
+                          activeIngredientRxcui: '7258'
+                          activeIngredientName: naproxen
+                          moietyRxcui: '7258'
+                          moietyName: naproxen
+                          numeratorValue: '250'
+                          numeratorUnit: MG
+                          denominatorValue: '1'
+                          denominatorUnit: EACH
+                      doseFormGroupNames:
+                        - 'Oral Product'
+                        - Pill
+                    -
+                      rxcui: '105899'
+                      name: 'naproxen 500 MG Oral Tablet [Naprosyn]'
+                      baseNames:
+                        -
+                          baseRxcui: '7258'
+                          baseName: naproxen
+                          bossRxcui: '7258'
+                          bossName: naproxen
+                          activeIngredientRxcui: '7258'
+                          activeIngredientName: naproxen
+                          moietyRxcui: '7258'
+                          moietyName: naproxen
+                          numeratorValue: '500'
+                          numeratorUnit: MG
+                          denominatorValue: '1'
+                          denominatorUnit: EACH
+                      doseFormGroupNames:
+                        - 'Oral Product'
+                        - Pill
+                    -
+                      rxcui: '1112233'
+                      name: 'naproxen sodium 220 MG Oral Capsule [Aleve]'
+                      baseNames:
+                        -
+                          baseRxcui: '7258'
+                          baseName: naproxen
+                          bossRxcui: '142442'
+                          bossName: 'naproxen sodium'
+                          activeIngredientRxcui: '142442'
+                          activeIngredientName: 'naproxen sodium'
+                          moietyRxcui: '7258'
+                          moietyName: naproxen
+                          numeratorValue: '220'
+                          numeratorUnit: MG
+                          denominatorValue: '1'
+                          denominatorUnit: EACH
+                      doseFormGroupNames:
+                        - 'Oral Product'
+                        - Pill
+                    -
+                      rxcui: '1116331'
+                      name: '24 HR naproxen 375 MG Extended Release Oral Tablet [Naprelan]'
+                      baseNames:
+                        -
+                          baseRxcui: '7258'
+                          baseName: naproxen
+                          bossRxcui: '7258'
+                          bossName: naproxen
+                          activeIngredientRxcui: '142442'
+                          activeIngredientName: 'naproxen sodium'
+                          moietyRxcui: '7258'
+                          moietyName: naproxen
+                          numeratorValue: '375'
+                          numeratorUnit: MG
+                          denominatorValue: '1'
+                          denominatorUnit: EACH
+                      doseFormGroupNames:
+                        - 'Oral Product'
+                        - Pill
+                    -
+                      rxcui: '1116341'
+                      name: '24 HR naproxen 500 MG Extended Release Oral Tablet [Naprelan]'
+                      baseNames:
+                        -
+                          baseRxcui: '7258'
+                          baseName: naproxen
+                          bossRxcui: '7258'
+                          bossName: naproxen
+                          activeIngredientRxcui: '7258'
+                          activeIngredientName: naproxen
+                          moietyRxcui: '7258'
+                          moietyName: naproxen
+                          numeratorValue: '500'
+                          numeratorUnit: MG
+                          denominatorValue: '1'
+                          denominatorUnit: EACH
+                      doseFormGroupNames:
+                        - 'Oral Product'
+                        - Pill
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        rxcui: '105898'
+                        name: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                        baseNames:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '7258'
+                            bossName: naproxen
+                            activeIngredientRxcui: '7258'
+                            activeIngredientName: naproxen
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '250'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        doseFormGroupNames:
+                          - 'Oral Product'
+                          - Pill
+                      -
+                        rxcui: '105899'
+                        name: 'naproxen 500 MG Oral Tablet [Naprosyn]'
+                        baseNames:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '7258'
+                            bossName: naproxen
+                            activeIngredientRxcui: '7258'
+                            activeIngredientName: naproxen
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '500'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        doseFormGroupNames:
+                          - 'Oral Product'
+                          - Pill
+                      -
+                        rxcui: '1112233'
+                        name: 'naproxen sodium 220 MG Oral Capsule [Aleve]'
+                        baseNames:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '142442'
+                            bossName: 'naproxen sodium'
+                            activeIngredientRxcui: '142442'
+                            activeIngredientName: 'naproxen sodium'
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '220'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        doseFormGroupNames:
+                          - 'Oral Product'
+                          - Pill
+                      -
+                        rxcui: '1116331'
+                        name: '24 HR naproxen 375 MG Extended Release Oral Tablet [Naprelan]'
+                        baseNames:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '7258'
+                            bossName: naproxen
+                            activeIngredientRxcui: '142442'
+                            activeIngredientName: 'naproxen sodium'
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '375'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        doseFormGroupNames:
+                          - 'Oral Product'
+                          - Pill
+                      -
+                        rxcui: '1116341'
+                        name: '24 HR naproxen 500 MG Extended Release Oral Tablet [Naprelan]'
+                        baseNames:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '7258'
+                            bossName: naproxen
+                            activeIngredientRxcui: '7258'
+                            activeIngredientName: naproxen
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '500'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        doseFormGroupNames:
+                          - 'Oral Product'
+                          - Pill
+                    items:
+                      type: object
+                      properties:
+                        rxcui:
+                          type: string
+                          example: '105898'
+                        name:
+                          type: string
+                          example: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                        baseNames:
+                          type: array
+                          example:
+                            -
+                              baseRxcui: '7258'
+                              baseName: naproxen
+                              bossRxcui: '7258'
+                              bossName: naproxen
+                              activeIngredientRxcui: '7258'
+                              activeIngredientName: naproxen
+                              moietyRxcui: '7258'
+                              moietyName: naproxen
+                              numeratorValue: '250'
+                              numeratorUnit: MG
+                              denominatorValue: '1'
+                              denominatorUnit: EACH
+                          items:
+                            type: object
+                            properties:
+                              baseRxcui:
+                                type: string
+                                example: '7258'
+                              baseName:
+                                type: string
+                                example: naproxen
+                              bossRxcui:
+                                type: string
+                                example: '7258'
+                              bossName:
+                                type: string
+                                example: naproxen
+                              activeIngredientRxcui:
+                                type: string
+                                example: '7258'
+                              activeIngredientName:
+                                type: string
+                                example: naproxen
+                              moietyRxcui:
+                                type: string
+                                example: '7258'
+                              moietyName:
+                                type: string
+                                example: naproxen
+                              numeratorValue:
+                                type: string
+                                example: '250'
+                              numeratorUnit:
+                                type: string
+                                example: MG
+                              denominatorValue:
+                                type: string
+                                example: '1'
+                              denominatorUnit:
+                                type: string
+                                example: EACH
+                        doseFormGroupNames:
+                          type: array
+                          example:
+                            - 'Oral Product'
+                            - Pill
+                          items:
+                            type: string
+      tags:
+        - 'Public APIs'
+      security: []
+    parameters:
+      -
+        in: path
+        name: drug_name
+        description: 'The drug name to search for.'
+        example: Naproxen
+        required: true
+        schema:
+          type: string
+  '/api/users/{user_id}/drugs':
+    get:
+      summary: 'Get prescribed drugs for a user'
+      operationId: getPrescribedDrugsForAUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: 2
+                      user_id: 1
+                      rxcui: '105898'
+                      name: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                      base_names:
+                        -
+                          baseRxcui: '7258'
+                          baseName: naproxen
+                          bossRxcui: '7258'
+                          bossName: naproxen
+                          activeIngredientRxcui: '7258'
+                          activeIngredientName: naproxen
+                          moietyRxcui: '7258'
+                          moietyName: naproxen
+                          numeratorValue: '250'
+                          numeratorUnit: MG
+                          denominatorValue: '1'
+                          denominatorUnit: EACH
+                      dose_form_group_names:
+                        - 'Oral Product'
+                        - Pill
+                      created_at: '2023-12-13T18:22:45.000000Z'
+                      updated_at: '2023-12-13T18:22:45.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 2
+                        user_id: 1
+                        rxcui: '105898'
+                        name: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                        base_names:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '7258'
+                            bossName: naproxen
+                            activeIngredientRxcui: '7258'
+                            activeIngredientName: naproxen
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '250'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        dose_form_group_names:
+                          - 'Oral Product'
+                          - Pill
+                        created_at: '2023-12-13T18:22:45.000000Z'
+                        updated_at: '2023-12-13T18:22:45.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 2
+                        user_id:
+                          type: integer
+                          example: 1
+                        rxcui:
+                          type: string
+                          example: '105898'
+                        name:
+                          type: string
+                          example: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                        base_names:
+                          type: array
+                          example:
+                            -
+                              baseRxcui: '7258'
+                              baseName: naproxen
+                              bossRxcui: '7258'
+                              bossName: naproxen
+                              activeIngredientRxcui: '7258'
+                              activeIngredientName: naproxen
+                              moietyRxcui: '7258'
+                              moietyName: naproxen
+                              numeratorValue: '250'
+                              numeratorUnit: MG
+                              denominatorValue: '1'
+                              denominatorUnit: EACH
+                          items:
+                            type: object
+                            properties:
+                              baseRxcui:
+                                type: string
+                                example: '7258'
+                              baseName:
+                                type: string
+                                example: naproxen
+                              bossRxcui:
+                                type: string
+                                example: '7258'
+                              bossName:
+                                type: string
+                                example: naproxen
+                              activeIngredientRxcui:
+                                type: string
+                                example: '7258'
+                              activeIngredientName:
+                                type: string
+                                example: naproxen
+                              moietyRxcui:
+                                type: string
+                                example: '7258'
+                              moietyName:
+                                type: string
+                                example: naproxen
+                              numeratorValue:
+                                type: string
+                                example: '250'
+                              numeratorUnit:
+                                type: string
+                                example: MG
+                              denominatorValue:
+                                type: string
+                                example: '1'
+                              denominatorUnit:
+                                type: string
+                                example: EACH
+                        dose_form_group_names:
+                          type: array
+                          example:
+                            - 'Oral Product'
+                            - Pill
+                          items:
+                            type: string
+                        created_at:
+                          type: string
+                          example: '2023-12-13T18:22:45.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2023-12-13T18:22:45.000000Z'
+      tags:
+        - 'User Drug Management'
+    post:
+      summary: 'Store a prescribed drug for a user'
+      operationId: storeAPrescribedDrugForAUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    rxcui: '105898'
+                    name: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                    base_names:
+                      -
+                        baseRxcui: '7258'
+                        baseName: naproxen
+                        bossRxcui: '7258'
+                        bossName: naproxen
+                        activeIngredientRxcui: '7258'
+                        activeIngredientName: naproxen
+                        moietyRxcui: '7258'
+                        moietyName: naproxen
+                        numeratorValue: '250'
+                        numeratorUnit: MG
+                        denominatorValue: '1'
+                        denominatorUnit: EACH
+                    dose_form_group_names:
+                      - 'Oral Product'
+                      - Pill
+                    user_id: 1
+                    updated_at: '2023-12-13T18:22:45.000000Z'
+                    created_at: '2023-12-13T18:22:45.000000Z'
+                    id: 2
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      rxcui:
+                        type: string
+                        example: '105898'
+                      name:
+                        type: string
+                        example: 'naproxen 250 MG Oral Tablet [Naprosyn]'
+                      base_names:
+                        type: array
+                        example:
+                          -
+                            baseRxcui: '7258'
+                            baseName: naproxen
+                            bossRxcui: '7258'
+                            bossName: naproxen
+                            activeIngredientRxcui: '7258'
+                            activeIngredientName: naproxen
+                            moietyRxcui: '7258'
+                            moietyName: naproxen
+                            numeratorValue: '250'
+                            numeratorUnit: MG
+                            denominatorValue: '1'
+                            denominatorUnit: EACH
+                        items:
+                          type: object
+                          properties:
+                            baseRxcui:
+                              type: string
+                              example: '7258'
+                            baseName:
+                              type: string
+                              example: naproxen
+                            bossRxcui:
+                              type: string
+                              example: '7258'
+                            bossName:
+                              type: string
+                              example: naproxen
+                            activeIngredientRxcui:
+                              type: string
+                              example: '7258'
+                            activeIngredientName:
+                              type: string
+                              example: naproxen
+                            moietyRxcui:
+                              type: string
+                              example: '7258'
+                            moietyName:
+                              type: string
+                              example: naproxen
+                            numeratorValue:
+                              type: string
+                              example: '250'
+                            numeratorUnit:
+                              type: string
+                              example: MG
+                            denominatorValue:
+                              type: string
+                              example: '1'
+                            denominatorUnit:
+                              type: string
+                              example: EACH
+                      dose_form_group_names:
+                        type: array
+                        example:
+                          - 'Oral Product'
+                          - Pill
+                        items:
+                          type: string
+                      user_id:
+                        type: integer
+                        example: 1
+                      updated_at:
+                        type: string
+                        example: '2023-12-13T18:22:45.000000Z'
+                      created_at:
+                        type: string
+                        example: '2023-12-13T18:22:45.000000Z'
+                      id:
+                        type: integer
+                        example: 2
+      tags:
+        - 'User Drug Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rxcui:
+                  type: string
+                  description: 'The rxcui of the drug.'
+                  example: '105898'
+              required:
+                - rxcui
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The id of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/users/{user_id}/drugs/{rxcui}':
+    delete:
+      summary: 'Delete a prescribed drug of a user'
+      operationId: deleteAPrescribedDrugOfAUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The drug is deleted'
+                properties:
+                  message:
+                    type: string
+                    example: 'The drug is deleted'
+      tags:
+        - 'User Drug Management'
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The id of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: rxcui
+        description: "The 'rxcui' of the drug to be deleted."
+        example: '105898'
+        required: true
+        schema:
+          type: string
+tags:
+  -
+    name: 'Auth APIs'
+    description: ''
+  -
+    name: 'Public APIs'
+    description: ''
+  -
+    name: 'User Drug Management'
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by from the response returned by the register or login endpoint.'
+security:
+  -
+    default: []
