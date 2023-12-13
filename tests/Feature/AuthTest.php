@@ -10,9 +10,6 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     */
     public function test_user_registration(): void
     {
         $response = $this->post('/api/auth/register', [
@@ -30,9 +27,6 @@ class AuthTest extends TestCase
         ]);
     }
 
-    /**
-     * A basic feature test example.
-     */
     public function test_user_login(): void
     {
         $this->post('/api/auth/register', [
@@ -51,9 +45,6 @@ class AuthTest extends TestCase
             ]);
     }
 
-    /**
-     * A basic feature test example.
-     */
     public function test_user_logout(): void
     {
         $this->post('/api/auth/register', [
@@ -76,9 +67,6 @@ class AuthTest extends TestCase
             ]);
     }
 
-    /**
-     * A basic feature test example.
-     */
     public function test_fetch_user(): void
     {
         $this->post('/api/auth/register', [

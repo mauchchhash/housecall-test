@@ -31,7 +31,7 @@ class Drug extends Model
     ];
 
     /**
-     * Get the post that owns the comment.
+     * Get the user that the drug is prescribed to
      */
     public function user(): BelongsTo
     {

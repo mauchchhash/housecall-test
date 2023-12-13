@@ -9,9 +9,6 @@ use Tests\TestCase;
 
 class DrugSearchTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
     public function test_drug_search_data_is_valid(): void
     {
         Http::fake([

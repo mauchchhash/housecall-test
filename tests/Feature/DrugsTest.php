@@ -13,9 +13,6 @@ class DrugsTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     */
     public function test_add_drug_to_user_medication_list(): void
     {
         // $this->withoutExceptionHandling();
@@ -35,9 +32,6 @@ class DrugsTest extends TestCase
         ])->assertStatus(201);
     }
 
-    /**
-     * A basic feature test example.
-     */
     public function test_delete_a_user_prescribed_drug(): void
     {
         Http::fake([
@@ -56,14 +50,9 @@ class DrugsTest extends TestCase
         ]);
         $drugId = $createdDrugResponse['data']['id'];
 
-        $this->delete("/api/users/{$user->id}/drugs/{$drugId}", [
-            'rxcui' => '105898'
-        ])->assertStatus(204);
+        $this->delete("/api/users/{$user->id}/drugs/105898")->assertStatus(204);
     }
 
-    /**
-     * A basic feature test example.
-     */
     public function test_get_prescribed_drugs_of_user(): void
     {
         // $this->withoutExceptionHandling();

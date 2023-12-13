@@ -9,7 +9,10 @@ use App\Services\RxNormApiService;
 class DrugsSearchController extends Controller
 {
     /**
-     * Handle the incoming request.
+     * Delete a prescribed drug of a user
+     *
+     * @param  string $drug_name
+     * @return array $data
      */
     public function __invoke(DrugsSearchRequest $request)
     {

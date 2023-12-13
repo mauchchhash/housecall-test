@@ -13,11 +13,22 @@ class DrugService
         $this->user = $user;
     }
 
+    /**
+     * Get the prescribed drugs of the user
+     *
+     * @return [Drug[]] drugs array
+     */
     public function getPrescribedDrugsOfUser()
     {
         return $this->user->drugs;
     }
 
+    /**
+     * Get the prescribed drugs of the user
+     *
+     * @param  [string] $rxcui
+     * @return [Drug] $createdDrug
+     */
     public function addNewDrugToUser(string $rxcui)
     {
         try {
@@ -41,6 +52,12 @@ class DrugService
         }
     }
 
+    /**
+     * Delete a prescribed drug of a user
+     *
+     * @param  string $rxcui
+     * @return boolean
+     */
     public function deleteDrug(string $rxcui)
     {
         try {

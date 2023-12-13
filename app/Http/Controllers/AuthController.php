@@ -15,8 +15,9 @@ class AuthController extends Controller
      * @param  [string] name
      * @param  [string] email
      * @param  [string] password
-     * @param  [string] password_confirmation
+     * @param  [string] confirm_password
      * @return [string] message
+     * @return [string] accessToken
      */
     public function register(Request $request)
     {
@@ -51,7 +52,8 @@ class AuthController extends Controller
      *
      * @param  [string] email
      * @param  [string] password
-     * @param  [boolean] remember_me
+     * @return [string] accessToken
+     * @return [string] token_type
      */
 
     public function login(Request $request)

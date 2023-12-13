@@ -10,6 +10,12 @@ use App\Services\DrugService;
 
 class DrugController extends Controller
 {
+    /**
+     * Get prescribed drugs for a user
+     *
+     * @param  [User] user
+     * @return [Drug[]] data
+     */
     public function index(User $user)
     {
         try {
@@ -21,6 +27,13 @@ class DrugController extends Controller
         }
     }
 
+    /**
+     * Store a prescribed drug for a user
+     *
+     * @param  [User] user
+     * @param  [string] rxcui
+     * @return [Drug] data
+     */
     public function store(User $user, DrugStoreRequest $request)
     {
         try {
@@ -33,13 +46,19 @@ class DrugController extends Controller
         }
     }
 
-    public function delete(User $user, DrugDeleteRequest $request)
+    /**
+     * Delete a prescribed drug of a user
+     *
+     * @param  [User] user
+     * @param  [string] rxcui
+     * @return [string] message
+     */
+    public function delete(User $user, $rxcui)
     {
         try {
-            $rxcui = $request->input('rxcui');
             $drugService = new DrugService($user);
             $createdDrug = $drugService->deleteDrug($rxcui);
-            return response()->json(['data' => 'The drug is deleted'], 204);
+            return response()->json(['message' => 'The drug is deleted'], 204);
         } catch (\Throwable $th) {
             throw $th;
         }
