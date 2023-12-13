@@ -22,19 +22,25 @@ class RxNormApiService
                 $responseData = Http::RxNormApi()->get('/drugs.json', [
                     'name' => $drugName
                 ])->json();
-                $conceptGroup = $responseData['drugGroup']['conceptGroup'];
-                $sbdData = collect($conceptGroup)->filter(function ($cg) {
-                    return $cg['tty'] === 'SBD';
-                })->first();
-                $topFiveDrugs = array_slice($sbdData['conceptProperties'], 0, 5);
-                foreach ($topFiveDrugs as &$d) {
-                    unset($d['synonym'], $d['tty'], $d['language'], $d['suppress'], $d['umlscui']);
 
-                    $history = $this->getRxcuiHistoryStatus($d['rxcui']);
+                if (isset($responseData['drugGroup']['conceptGroup'])) {
+                    $conceptGroup = $responseData['drugGroup']['conceptGroup'];
+                    $sbdData = collect($conceptGroup)->filter(function ($cg) {
+                        return $cg['tty'] === 'SBD';
+                    })->first();
+                    $topFiveDrugs = array_slice($sbdData['conceptProperties'], 0, 5);
+                    foreach ($topFiveDrugs as &$d) {
+                        unset($d['synonym'], $d['tty'], $d['language'], $d['suppress'], $d['umlscui']);
 
-                    $d['baseNames'] = $this->getBaseNamesFromHistory($history);
-                    $d['doseFormGroupNames'] = $this->getDoseFormGroupNamesFromHistory($history);
+                        $history = $this->getRxcuiHistoryStatus($d['rxcui']);
+
+                        $d['baseNames'] = $this->getBaseNamesFromHistory($history);
+                        $d['doseFormGroupNames'] = $this->getDoseFormGroupNamesFromHistory($history);
+                    }
+                } else {
+                    $topFiveDrugs = [];
                 }
+
                 cache([$drugName => $topFiveDrugs], now()->addMinutes(60));
             }
             return $topFiveDrugs;
