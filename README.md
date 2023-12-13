@@ -18,6 +18,10 @@ Technichal Feats:
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## API Documentation
+
+View the API Documentation in the route: /docs
+
 ## Postman Collection
 
 [View the Postman Collection here](https://github.com/mauchchhash/housecall-test/blob/main/public/docs/collection.json)
